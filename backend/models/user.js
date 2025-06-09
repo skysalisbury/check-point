@@ -18,6 +18,8 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
+    wishlist: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
   },
   {
     timestamps: true,
