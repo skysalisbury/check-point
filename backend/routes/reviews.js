@@ -14,4 +14,13 @@
 // //POST /api/reviews (CREATE action)
 // router.post('/', reviewsCtrl.create);
 
+// //GET /api/reviews/:reviewId (SHOW action)
+// router.get('/', reviewsCtrl.show);
+
+// //PUT /api/reviews/:reviewId (UPDATE action)
+// router.put('/', reviewsCtrl.update);
+
+// //DELETE /api/reviews/:reviewId (DELETE action)
+// router.delete('/', reviewsCtrl.deleteReview);
+
 // module.exports = router;

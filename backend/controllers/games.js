@@ -1,4 +1,5 @@
 const Game = require('../models/game');
+const fetch = require('node-fetch');
 
 module.exports = {
   index,
@@ -32,7 +33,7 @@ async function create(req, res) {
 
 async function show(req, res) {
   try {
-    const game = await Game.findById(req.params.gameId).populate('reviews');
+    const game = await Game.findById(req.params.gameId);
     if (!game) return res.status(404).json({ message: 'Game not found' });
     res.json(game);
   } catch (err) {
