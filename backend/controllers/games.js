@@ -1,5 +1,6 @@
 const Game = require('../models/game');
 const fetch = require('node-fetch');
+const BASE_URL = 'https://api.rawg.io/api';
 
 module.exports = {
   index,
@@ -23,11 +24,27 @@ async function index(req, res) {
 
 async function create(req, res) {
   try {
-    const game = await Game.create(req.body);
-    res.json(game);
+    const rawgId = req.body.rawgId.toString();
+    const existing = await Game.findOne({ rawgId });
+    if (existing) return res.json(existing);
+
+    const response = await fetch(
+      `${BASE_URL}/games/${rawgId}?key=${process.env.RAWG_API_KEY}`
+    );
+    const data = await response.json();
+
+    const newGame = await Game.create({
+      rawgId: data.id.toString(),
+      title: data.name,
+      coverImage: data.background_image,
+      genres: data.genres?.map((g) => g.name) || [],
+      platforms: data.platforms?.map((p) => p.platform.name) || [],
+      reviews: [],
+    });
+    res.json(newGame);
   } catch (err) {
-    console.log(err);
-    res.status(400).json({ message: 'Failed to fetch Games' });
+    console.error('Failed to create game from RAWG', err);
+    res.status(400).json({ message: 'Failed to create game' });
   }
 }
 

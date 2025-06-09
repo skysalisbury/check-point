@@ -6,6 +6,6 @@ const rawgCtrl = require('../controllers/rawg');
 router.get('/search', rawgCtrl.searchGames);
 
 // Get Game Details by Id (Show)
-router.get('/:id', rawgCtrl.getGameDetails);
+router.get('/:rawgId', rawgCtrl.getGameDetails);
 
 module.exports = router;

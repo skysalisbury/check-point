@@ -21,6 +21,6 @@ router.get('/:gameId', gamesCtrl.show);
 router.put('/:gameId', ensureLoggedIn, gamesCtrl.update);
 
 //DELETE /api/games/:gameId (DELETE Action)
-router.delete('/gameId', ensureLoggedIn, gamesCtrl.deleteGame);
+router.delete('/:gameId', ensureLoggedIn, gamesCtrl.deleteGame);
 
 module.exports = router;
