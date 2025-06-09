@@ -32,7 +32,7 @@ async function create(req, res) {
 
 async function show(req, res) {
   try {
-    const game = await Game.findById(req.params.id).populate('reviews');
+    const game = await Game.findById(req.params.gameId).populate('reviews');
     if (!game) return res.status(404).json({ message: 'Game not found' });
     res.json(game);
   } catch (err) {
@@ -42,7 +42,7 @@ async function show(req, res) {
 
 async function update(req, res) {
   try {
-    const game = await Game.findByIdAndUpdate(req.params.id, req.body, {
+    const game = await Game.findByIdAndUpdate(req.params.gameId, req.body, {
       new: true,
     });
     res.json(game);
@@ -53,7 +53,7 @@ async function update(req, res) {
 
 async function deleteGame(req, res) {
   try {
-    await Game.findByIdAndDelete(req.params.id);
+    await Game.findByIdAndDelete(req.params.gameId);
     res.status(204).end();
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -12,15 +12,15 @@ router.use(ensureLoggedIn);
 router.get('/', gamesCtrl.index);
 
 //POST /api/games (CREATE action)
-router.post('/', gamesCtrl.create);
+router.post('/', ensureLoggedIn, gamesCtrl.create);
 
 //GET /api/games/:gameId (Show Action)
 router.get('/:gameId', gamesCtrl.show);
 
 //PUT /api/games/:gameId (Update Action)
-router.put('/:gameId', gamesCtrl.update);
+router.put('/:gameId', ensureLoggedIn, gamesCtrl.update);
 
 //DELETE /api/games/:gameId (DELETE Action)
-router.delete('/gameId', gamesCtrl.deleteGame);
+router.delete('/gameId', ensureLoggedIn, gamesCtrl.deleteGame);
 
 module.exports = router;
