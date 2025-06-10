@@ -14,7 +14,7 @@ async function seedGames() {
 
   try {
     const res = await fetch(
-      `${BASE_URL}/games?key=${process.env.RAWG_API_KEY}&ordering=-rating&page_size=50`
+      `${BASE_URL}/games?key=${process.env.RAWG_API_KEY}&tags=singleplayer&publishers=nintendo,sony-interactive-entertainment,ubisoft,ea,rockstar-games,capcom,activision&page_size=50&ordering=-rating`
     );
     const { results } = await res.json();
 
@@ -33,8 +33,11 @@ async function seedGames() {
         rawgId: detailedData.id.toString(),
         title: detailedData.name,
         coverImage: detailedData.background_image,
+        released: detailedData.released || 'N/A',
         genres: detailedData.genres?.map((g) => g.name) || [],
         platforms: detailedData.platforms?.map((p) => p.platform.name) || [],
+        developers: detailedData.developers?.map((d) => d.name) || ['N/A'],
+        publishers: detailedData.publishers?.map((p) => p.name) || ['N/A'],
         reviews: [],
       });
 
