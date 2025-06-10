@@ -8,6 +8,9 @@ const gameSchema = new Schema(
     coverImage: String,
     genres: [String],
     platforms: [String],
+    released: String,
+    developers: [String],
+    publishers: [String],
     reviews: [{ type: Schema.Types.ObjectId, ref: 'Review' }],
   },
 

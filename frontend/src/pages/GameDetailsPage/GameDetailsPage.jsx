@@ -7,24 +7,6 @@ export default function GameDetailsPage(props) {
   const params = useParams();
   const { gameId } = params;
 
-  // const handleAddComment = async (commentFormData) => {
-  //   const newComment = await hootService.createComment(gameId, commentFormData);
-  //   setGame({ ...game, comments: [...game.comments, newComment] });
-  // };
-
-//   const handleDeleteComment = async (commentId) => {
-//   try {
-//     await hootService.deleteComment(gameId, commentId);
-//     setGame({
-//       ...game,
-//       comments: game.comments.filter((comment) => comment._id !== commentId),
-//     });
-//   } catch (err) {
-//     console.error('Error deleting comment:', err);
-//   }
-// };
-
-
   useEffect(() => {
     async function fetchGame() {
       const gameData = await gameService.show(gameId);

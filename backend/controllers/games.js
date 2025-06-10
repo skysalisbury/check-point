@@ -39,6 +39,9 @@ async function create(req, res) {
       coverImage: data.background_image,
       genres: data.genres?.map((g) => g.name) || [],
       platforms: data.platforms?.map((p) => p.platform.name) || [],
+      released: data.released,
+      developers: data.developers?.map((d) => d.name) || [],
+      publishers: data.publishers?.map((p) => p.name) || [],
       reviews: [],
     });
     res.json(newGame);
