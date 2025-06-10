@@ -9,3 +9,7 @@ export async function index() {
 export async function create(gameData) {
   return sendRequest(BASE_URL, 'POST', gameData);
 }
+
+export async function show(gameId) {
+  return sendRequest(`${BASE_URL}/${gameId}`);
+}

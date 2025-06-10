@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router';
 import { getUser } from '../../services/authService';
 import HomePage from '../HomePage/HomePage';
 import GameListPage from '../GameListPage/GameListPage';
+import GameDetailsPage from '../GameDetailsPage/GameDetailsPage';
 import NewPostPage from '../NewPostPage/NewPostPage';
 import SignUpPage from '../SignUpPage/SignUpPage';
 import LogInPage from '../LogInPage/LogInPage';
@@ -21,6 +22,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/games" element={<GameListPage />} />
+            <Route path="/games/:gameId" element={<GameDetailsPage />} />
             <Route path="/posts/new" element={<NewPostPage />} />
             <Route path="*" element={null} />
           </Routes>

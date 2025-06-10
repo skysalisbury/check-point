@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router";
 import * as gameService from '../../services/gameService';
 
-export default function GameListPage() {
+export default function GameListPage(props) {
  const [games, setGames] = useState([]);
 
  useEffect(() => {
