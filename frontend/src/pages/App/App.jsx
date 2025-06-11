@@ -4,7 +4,6 @@ import { getUser } from '../../services/authService';
 import HomePage from '../HomePage/HomePage';
 import GameListPage from '../GameListPage/GameListPage';
 import GameDetailsPage from '../GameDetailsPage/GameDetailsPage';
-import NewPostPage from '../NewPostPage/NewPostPage';
 import SignUpPage from '../SignUpPage/SignUpPage';
 import LogInPage from '../LogInPage/LogInPage';
 import NavBar from '../../components/NavBar/NavBar';
@@ -23,7 +22,6 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/games" element={<GameListPage />} />
             <Route path="/games/:gameId" element={<GameDetailsPage />} />
-            <Route path="/posts/new" element={<NewPostPage />} />
             <Route path="*" element={null} />
           </Routes>
         ) : (

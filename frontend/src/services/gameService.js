@@ -13,3 +13,11 @@ export async function create(gameData) {
 export async function show(gameId) {
   return sendRequest(`${BASE_URL}/${gameId}`);
 }
+
+export async function update(gameId, gameData) {
+  return sendRequest(`${BASE_URL}/${gameId}`, 'PUT, gameData');
+}
+
+export async function deleteGame(gameId) {
+  return sendRequest(`${BASE_URL}/${gameId}`, 'DELETE');
+}
