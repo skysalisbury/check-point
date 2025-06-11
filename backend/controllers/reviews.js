@@ -27,6 +27,7 @@ async function create(req, res) {
     if (!game) return res.status(404).json({ message: 'Game not found' });
 
     const review = await Review.create({
+      title: req.body.title,
       text: req.body.text,
       rating: req.body.rating,
       author: req.user._id,
@@ -37,7 +38,7 @@ async function create(req, res) {
     await game.save();
 
     await review.populate('author');
-    res.status(201).json(Review);
+    res.status(201).json(review);
   } catch (err) {
     res.status(500).json({ err: err.message });
   }
@@ -45,13 +46,14 @@ async function create(req, res) {
 
 async function show(req, res) {
   try {
-    const game = await Game.findById(req.params.gameId).populate(
-      'comments.author'
+    const review = await Review.findById(req.params.reviewId).populate(
+      'author'
     );
-    const review = game.reviews.id(req.params.reviewId); // correct way to access subdoc
-
-    if (!review) return res.status(404).json({ message: 'Review not found' });
-
+    if (!review || review.game.toString() !== req.params.gameId) {
+      return res
+        .status(404)
+        .json({ message: 'Review not found for this game' });
+    }
     res.json(review);
   } catch (err) {
     console.log(err);
@@ -70,7 +72,7 @@ async function update(req, res) {
 
     review.text = req.body.text ?? review.text;
     review.rating = req.body.rating ?? review.rating;
-    await game.save();
+    await review.save();
 
     res.json(review);
   } catch (err) {
@@ -91,8 +93,9 @@ async function deleteReview(req, res) {
     }
 
     await Game.findByIdAndUpdate(review.game, {
-      $pull: { review: review._id },
+      $pull: { reviews: review._id },
     });
+    await Review.findByIdAndDelete(review._id);
 
     res.sendStatus(204);
   } catch (err) {

@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const reviewsCtrl = require('../controllers/reviews');
 const ensureLoggedIn = require('../middleware/ensureLoggedIn');
 
@@ -9,22 +9,18 @@ const ensureLoggedIn = require('../middleware/ensureLoggedIn');
 router.use(ensureLoggedIn);
 
 // GET /api/games/:gameId/reviews (INDEX action)
-router.get('/:gameId/reviews', reviewsCtrl.index);
+router.get('/', reviewsCtrl.index);
 
 //POST /api/games/:gameId/reviews (CREATE action)
-router.post('/:gameId/reviews', ensureLoggedIn, reviewsCtrl.create);
+router.post('/', ensureLoggedIn, reviewsCtrl.create);
 
 //GET /api/games/:gameId/reviews/:reviewId (SHOW action)
-router.get('/:gameId/reviews/:reviewId', reviewsCtrl.show);
+router.get('/:reviewId', reviewsCtrl.show);
 
 //PUT /api/reviews/:reviewId (UPDATE action)
-router.put('/:gameId/reviews/:reviewId', ensureLoggedIn, reviewsCtrl.update);
+router.put('/:reviewId', ensureLoggedIn, reviewsCtrl.update);
 
 //DELETE /api/reviews/:reviewId (DELETE action)
-router.delete(
-  '/:gameId/reviews/:reviewId',
-  ensureLoggedIn,
-  reviewsCtrl.deleteReview
-);
+router.delete('/:reviewId', ensureLoggedIn, reviewsCtrl.deleteReview);
 
 module.exports = router;
