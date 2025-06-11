@@ -9,7 +9,7 @@ const ensureLoggedIn = require('../middleware/ensureLoggedIn');
 router.use(ensureLoggedIn);
 
 // GET /api/games/:gameId/reviews (INDEX action)
-router.get('/', reviewsCtrl.index);
+router.get('/', reviewsCtrl.globalIndex);
 
 //POST /api/games/:gameId/reviews (CREATE action)
 router.post('/', ensureLoggedIn, reviewsCtrl.create);

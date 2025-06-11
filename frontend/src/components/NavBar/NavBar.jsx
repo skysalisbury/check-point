@@ -21,7 +21,7 @@ export default function NavBar({ user, setUser }) {
             Game List
           </NavLink>
           &nbsp; | &nbsp;
-          {/* <NavLink to="/posts/new">New Post</NavLink> */}
+          <Link to="/reviews">All Reviews</Link>
           &nbsp; | &nbsp;
           <Link to="/" onClick={handleLogOut}>Log Out</Link>
           <span>Welcome, {user.name}</span>

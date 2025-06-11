@@ -2,22 +2,21 @@ const Review = require('../models/review');
 const Game = require('../models/game');
 
 module.exports = {
-  index,
+  globalIndex,
   show,
   create,
   update,
   deleteReview,
 };
 
-async function index(req, res) {
+async function globalIndex(req, res) {
   try {
-    const reviews = await Review.find({ game: req.params.gameId })
-      .populate('author')
+    const reviews = await Review.find({})
+      .populate('author game')
       .sort({ createdAt: -1 });
     res.json(reviews);
   } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: 'Failed to fetch Review' });
+    res.status(500).json({ message: 'Failed to fetch all reviews' });
   }
 }
 

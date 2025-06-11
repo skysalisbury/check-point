@@ -25,6 +25,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/posts', require('./routes/posts'));
 app.use('/api/rawg', require('./routes/rawg'));
 app.use('/api/games/:gameId/reviews', require('./routes/reviews'));
+app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/games', require('./routes/games'));
 // Routers mounted below ensureLoggedIn middleware
 // protects all routes defined in that router

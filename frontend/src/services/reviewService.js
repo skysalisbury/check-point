@@ -1,11 +1,14 @@
 import sendRequest from './sendRequest';
 
+const BASE_URL = '/api/reviews';
+
 export async function create(gameId, reviewData) {
   return sendRequest(`/api/games/${gameId}/reviews`, 'POST', reviewData);
 }
 
-export async function index(gameId) {
-  return sendRequest(`/api/games/${gameId}/reviews`);
+//index
+export async function getAll(gameId) {
+  return sendRequest(`${BASE_URL}`);
 }
 
 export async function show(gameId, reviewId) {
