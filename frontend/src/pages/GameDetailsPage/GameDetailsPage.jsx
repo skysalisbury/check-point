@@ -4,15 +4,20 @@ import * as gameService from '../../services/gameService';
 
 export default function GameDetailsPage(props) {
   const [game, setGame] = useState(null);
+  const [reviews, setReviews] = useState([]);
   const params = useParams();
   const { gameId } = params;
 
   useEffect(() => {
-    async function fetchGame() {
+    async function fetchGameAndReviews() {
       const gameData = await gameService.show(gameId);
       setGame(gameData);
+
+      const res = await fetch(`/api/games/${gameId}/reviews`);
+      const reviewData = await res.json();
+      setReviews(reviewData);
     }
-    fetchGame();
+    fetchGameAndReviews();
   }, [gameId]);
   console.log('game state:', game);
 
@@ -33,6 +38,7 @@ export default function GameDetailsPage(props) {
 
       <section style={{ marginTop: '2rem' }}>
         <h2>Reviews</h2>
+        <ReviewForm gameId={gameId} />
         <p>(You will render reviews here later)</p>
       </section>
     </div>
