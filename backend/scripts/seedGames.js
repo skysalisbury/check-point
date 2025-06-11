@@ -43,7 +43,6 @@ async function seedGames() {
 
       console.log(`Saved: ${detailedData.name}`);
     }
-
     console.log('Finished seeding top 50 games.');
   } catch (err) {
     console.error('Error seeding games:', err.message);

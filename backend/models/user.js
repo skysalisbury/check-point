@@ -18,6 +18,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
+    isAdmin: { type: Boolean, default: false },
     favorites: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
     wishlist: [{ type: Schema.Types.ObjectId, ref: 'Game' }],
   },

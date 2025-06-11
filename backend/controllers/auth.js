@@ -36,7 +36,7 @@ async function signUp(req, res) {
 function createJWT(user) {
   return jwt.sign(
     // data payload
-    { user },
+    { user: user._id, isAdmin: user.isAdmin },
     process.env.SECRET,
     { expiresIn: '24h' }
   );
