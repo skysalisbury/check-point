@@ -6,8 +6,14 @@ import * as gameService from '../../services/gameService';
 export default function GameDetailsPage(props) {
   const [game, setGame] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
   const params = useParams();
   const { gameId } = params;
+  const [editedReviewData, setEditedReviewData] = useState({
+    title: '',
+    text: '',
+    rating: '',
+  });
 
   useEffect(() => {
     async function fetchGameAndReviews() {
@@ -27,9 +33,8 @@ export default function GameDetailsPage(props) {
   console.log('game state:', game);
 
   function handleAddReview(newReview) {
-  setReviews(prevReviews => [newReview, ...prevReviews]);
-}
-
+    setReviews((prevReviews) => [newReview, ...prevReviews]);
+  }
 
   if (!game) return <main>Loading...</main>;
   return (
@@ -59,15 +64,75 @@ export default function GameDetailsPage(props) {
       <section style={{ marginTop: '2rem' }}>
         <h2>Reviews</h2>
         <ReviewForm gameId={gameId} onReviewAdded={handleAddReview} />
+
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review._id}>
-              <p>
-                <strong>{review.title}</strong> by 
-                <strong> {review.author?.name || 'Anonymous'}:</strong>{' '}
-                {review.text}
-              </p>
-              <p>Rating: {review.rating}</p>
+            <div key={review._id} style={{ marginBottom: '1rem' }}>
+              {isEditing === review._id ? (
+                <>
+                  <label>Title</label>
+                  <input
+                    name="title"
+                    value={editedReviewData.title}
+                    onChange={(e) =>
+                      setEditedReviewData({
+                        ...editedReviewData,
+                        title: e.target.value,
+                      })
+                    }
+                  />
+                  <label>Review</label>
+                  <textarea
+                    name="text"
+                    value={editedReviewData.text}
+                    onChange={(e) =>
+                      setEditedReviewData({
+                        ...editedReviewData,
+                        text: e.target.value,
+                      })
+                    }
+                  />
+                  <label>Rating</label>
+                  <input
+                    name="rating"
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={editedReviewData.rating}
+                    onChange={(e) =>
+                      setEditedReviewData({
+                        ...editedReviewData,
+                        rating: e.target.value,
+                      })
+                    }
+                  />
+                  <button onClick={() => handleUpdateReview(review._id)}>
+                    Save
+                  </button>
+                  <button onClick={() => setIsEditing(false)}>Cancel</button>
+                </>
+              ) : (
+                <>
+                  <p>
+                    <strong>{review.title}</strong> by{' '}
+                    <strong>{review.author?.name || 'Anonymous'}:</strong>{' '}
+                    {review.text}
+                  </p>
+                  <p>Rating: {review.rating}</p>
+                  <button
+                    onClick={() => {
+                      setIsEditing(review._id);
+                      setEditedReviewData({
+                        title: review.title,
+                        text: review.text,
+                        rating: review.rating,
+                      });
+                    }}
+                  >
+                    Edit
+                  </button>
+                </>
+              )}
             </div>
           ))
         ) : (
