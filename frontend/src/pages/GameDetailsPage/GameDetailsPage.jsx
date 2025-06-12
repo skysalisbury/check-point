@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { useParams, Link } from 'react-router';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import * as gameService from '../../services/gameService';
+import * as reviewService from '../../services/reviewService';
 
 export default function GameDetailsPage(props) {
   const [game, setGame] = useState(null);
@@ -35,6 +36,22 @@ export default function GameDetailsPage(props) {
   function handleAddReview(newReview) {
     setReviews((prevReviews) => [newReview, ...prevReviews]);
   }
+
+  function handleUpdateReview(reviewId) {
+  reviewService
+    .update(gameId, reviewId, editedReviewData)
+    .then((updatedReview) => {
+      setReviews((prevReviews) =>
+        prevReviews.map((r) => (r._id === reviewId ? updatedReview : r))
+      );
+      setIsEditing(false);
+      setEditedReviewData({ title: '', text: '', rating: '' });
+    })
+    .catch((err) => {
+      console.error('Failed to update review:', err);
+      alert('Unauthorized or failed to update review.');
+    });
+}
 
   if (!game) return <main>Loading...</main>;
   return (

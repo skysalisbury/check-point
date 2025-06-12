@@ -66,7 +66,9 @@ async function update(req, res) {
     if (!review) return res.status(404).json({ message: 'Review not found' });
 
     if (!review.author.equals(req.user._id)) {
-      return res.status(403).send("You're not allowed to update this review");
+      return res
+        .status(403)
+        .json({ message: 'Not authorized to update this review' });
     }
 
     review.text = req.body.text ?? review.text;
