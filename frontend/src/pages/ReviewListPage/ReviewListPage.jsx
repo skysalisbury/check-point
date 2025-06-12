@@ -4,7 +4,7 @@ import * as reviewService from '../../services/reviewService';
 
 export default function ReviewListPage() {
   const [reviews, setReviews] = useState([]);
-  // const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function fetchReviews() {
@@ -13,11 +13,6 @@ export default function ReviewListPage() {
     }
     fetchReviews();
   }, []);
-
-  // const handleEditClick = (review) => {
-  //   setIsEditing(review._id);
-    
-  // }
 
   return (
     <main style={{ padding: '1rem' }}>
