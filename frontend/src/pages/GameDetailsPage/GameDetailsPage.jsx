@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
-import { useParams, Link } from 'react-router';
+import { useParams, Link, useNavigate } from 'react-router';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
+import GameForm from '../../components/GameForm/GameForm';
 import * as gameService from '../../services/gameService';
 import * as reviewService from '../../services/reviewService';
 
@@ -8,6 +9,8 @@ export default function GameDetailsPage(props) {
   const [game, setGame] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingGame, setIsEditingGame] = useState(false);
+  const navigate = useNavigate();
   const params = useParams();
   const { gameId } = params;
   const [editedReviewData, setEditedReviewData] = useState({
@@ -89,10 +92,15 @@ export default function GameDetailsPage(props) {
       <p>
         <strong>Publishers:</strong> {game.publishers?.join(', ') || 'N/A'}
       </p>
-
+      {props.user?.isAdmin && !isEditingGame && (
+        <button onClick={() => setIsEditingGame(true)}>Edit Game</button>
+      )}
+      {isEditingGame && props.user?.isAdmin && (
+        <GameForm game={game} setGame={setGame} setIsEditingGame={setIsEditingGame} />
+      )}
       <section style={{ marginTop: '2rem' }}>
         <h2>Reviews</h2>
-        <ReviewForm gameId={gameId} onReviewAdded={handleAddReview} />
+        <ReviewForm gameId={gameId} setIsEditingGame={setIsEditingGame} onReviewAdded={handleAddReview} />
 
         {reviews.length > 0 ? (
           reviews.map((review) => {

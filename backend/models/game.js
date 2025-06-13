@@ -5,6 +5,7 @@ const gameSchema = new Schema(
   {
     rawgId: { type: String, required: true },
     title: String,
+    description: String,
     coverImage: String,
     genres: [String],
     platforms: [String],

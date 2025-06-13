@@ -6,7 +6,7 @@ module.exports = {
   index,
   show,
   create,
-  update,
+  updateGame,
   deleteGame,
 };
 
@@ -61,14 +61,24 @@ async function show(req, res) {
   }
 }
 
-async function update(req, res) {
+async function updateGame(req, res) {
   try {
-    const game = await Game.findByIdAndUpdate(req.params.gameId, req.body, {
-      new: true,
-    });
-    res.json(game);
+    console.log('Incoming update payload:', req.body);
+    const updatedGame = await Game.findByIdAndUpdate(
+      req.params.gameId,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    console.log('Updated game:', updatedGame);
+
+    if (!updatedGame) {
+      return res.status(404).json({ message: 'Game not found' });
+    }
+
+    res.json(updatedGame);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error('Update error:', err);
+    res.status(400).json({ message: 'Failed to update game' });
   }
 }
 
