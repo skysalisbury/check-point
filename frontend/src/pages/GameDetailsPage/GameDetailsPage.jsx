@@ -53,6 +53,18 @@ export default function GameDetailsPage(props) {
       });
   }
 
+  async function handleDeleteReview(reviewId) {
+    try {
+      await reviewService.deleteReview(gameId, reviewId);
+      setReviews((prevReviews) =>
+        prevReviews.filter((r) => r._id !== reviewId)
+      );
+    } catch (err) {
+      console.error('Failed to delete review:', err);
+      alert('You are not authorized to delete this review.');
+    }
+  }
+
   if (!game) return <main>Loading...</main>;
   return (
     <div style={{ padding: '1rem' }}>

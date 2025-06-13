@@ -1,5 +1,6 @@
 const Review = require('../models/review');
 const Game = require('../models/game');
+const mongoose = require('mongoose');
 
 module.exports = {
   globalIndex,
@@ -87,18 +88,22 @@ async function deleteReview(req, res) {
     const review = await Review.findById(req.params.reviewId);
     if (!review) return res.status(404).json({ message: 'Review not found' });
 
-    if (!review.author.equals(req.user._id)) {
+    const authorId = new mongoose.Types.ObjectId(review.author);
+    const isAuthor = authorId.equals(req.user._id);
+    const isAdmin = req.user.isAdmin;
+
+    if (!isAuthor && !isAdmin) {
       return res
         .status(403)
         .json({ message: 'Not authorized to delete this review' });
     }
 
+    await review.deleteOne();
     await Game.findByIdAndUpdate(review.game, {
       $pull: { reviews: review._id },
     });
-    await Review.findByIdAndDelete(review._id);
 
-    res.sendStatus(204);
+    res.status(200).json({ message: 'Deleted' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to delete review' });
