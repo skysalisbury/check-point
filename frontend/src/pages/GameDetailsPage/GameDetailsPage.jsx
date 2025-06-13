@@ -172,6 +172,14 @@ export default function GameDetailsPage(props) {
                     <button onClick={() => handleUpdateReview(review._id)}>
                       Save
                     </button>
+                    <button
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditedReviewData({ title: '', text: '', rating: 0 });
+                      }}
+                    >
+                      Cancel
+                    </button>
                   </div>
                 )}
               </div>
