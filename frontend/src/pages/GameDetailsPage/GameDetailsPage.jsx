@@ -1,18 +1,20 @@
-import { useState, useEffect, useContext } from 'react';
-import { useParams, Link, useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router';
 import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import GameForm from '../../components/GameForm/GameForm';
 import * as gameService from '../../services/gameService';
 import * as reviewService from '../../services/reviewService';
+
+const MAX_PREVIEW_LENGTH = 100;
 
 export default function GameDetailsPage(props) {
   const [game, setGame] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingGame, setIsEditingGame] = useState(false);
+  const [expandedReviewId, setExpandedReviewId] = useState(null);
   const navigate = useNavigate();
-  const params = useParams();
-  const { gameId } = params;
+  const { gameId } = useParams();
   const [editedReviewData, setEditedReviewData] = useState({
     title: '',
     text: '',
@@ -21,7 +23,7 @@ export default function GameDetailsPage(props) {
 
   useEffect(() => {
     async function fetchGameAndReviews() {
-      const game = await gameService.show(gameId); // ✅ this line
+      const game = await gameService.show(gameId);
       setGame(game);
 
       const res = await fetch(`/api/games/${gameId}/reviews`, {
@@ -34,7 +36,6 @@ export default function GameDetailsPage(props) {
     }
     fetchGameAndReviews();
   }, [gameId]);
-  console.log('game state:', game);
 
   function handleAddReview(newReview) {
     setReviews((prevReviews) => [newReview, ...prevReviews]);
@@ -68,7 +69,12 @@ export default function GameDetailsPage(props) {
     }
   }
 
+  function toggleExpand(reviewId) {
+    setExpandedReviewId((prevId) => (prevId === reviewId ? null : reviewId));
+  }
+
   if (!game) return <main>Loading...</main>;
+
   return (
     <div style={{ padding: '1rem' }}>
       <h1>{game.title}</h1>
@@ -107,6 +113,7 @@ export default function GameDetailsPage(props) {
           setIsEditingGame={setIsEditingGame}
         />
       )}
+
       <section style={{ marginTop: '2rem' }}>
         <h2>Reviews</h2>
         <ReviewForm
@@ -120,8 +127,13 @@ export default function GameDetailsPage(props) {
             const canEditOrDelete =
               review.author &&
               (review.author._id === props.user?._id || props.user?.isAdmin);
-            console.log('review.author:', review.author);
-            console.log('user:', props.user);
+
+            const isExpanded = expandedReviewId === review._id;
+            const isLong = review.text.length > MAX_PREVIEW_LENGTH;
+            const previewText = isExpanded
+              ? review.text
+              : review.text.slice(0, MAX_PREVIEW_LENGTH) +
+                (isLong ? '...' : '');
 
             return (
               <div
@@ -133,7 +145,12 @@ export default function GameDetailsPage(props) {
                 }}
               >
                 <h3>{review.title}</h3>
-                <p>{review.text}</p>
+                <p>{previewText}</p>
+                {isLong && (
+                  <button onClick={() => toggleExpand(review._id)}>
+                    {isExpanded ? 'Show less' : 'Read more'}
+                  </button>
+                )}
                 <p>Rating: {review.rating}</p>
                 <p>
                   <strong>By:</strong> {review.author?.name || 'Anonymous'}
@@ -196,7 +213,11 @@ export default function GameDetailsPage(props) {
                     <button
                       onClick={() => {
                         setIsEditing(false);
-                        setEditedReviewData({ title: '', text: '', rating: 0 });
+                        setEditedReviewData({
+                          title: '',
+                          text: '',
+                          rating: '',
+                        });
                       }}
                     >
                       Cancel
