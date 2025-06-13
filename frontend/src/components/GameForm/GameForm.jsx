@@ -29,7 +29,7 @@ export default function GameForm({ game, setGame, setIsEditingGame }) {
         publishers: formData.publishers.split(',').map((p) => p.trim()),
       };
 
-      const updatedGame = await updateGame(gameId, payload); // ✅ client-side function
+      const updatedGame = await updateGame(gameId, payload);
 
       setGame(updatedGame);
       setIsEditingGame(false);

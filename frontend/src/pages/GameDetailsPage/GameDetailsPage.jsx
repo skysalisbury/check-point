@@ -21,8 +21,8 @@ export default function GameDetailsPage(props) {
 
   useEffect(() => {
     async function fetchGameAndReviews() {
-      const gameData = await gameService.show(gameId);
-      setGame(gameData);
+      const game = await gameService.show(gameId); // ✅ this line
+      setGame(game);
 
       const res = await fetch(`/api/games/${gameId}/reviews`, {
         headers: {
@@ -92,15 +92,28 @@ export default function GameDetailsPage(props) {
       <p>
         <strong>Publishers:</strong> {game.publishers?.join(', ') || 'N/A'}
       </p>
+      <p>
+        <strong>Description:</strong>{' '}
+        {game.description || 'No description provided.'}
+      </p>
+
       {props.user?.isAdmin && !isEditingGame && (
         <button onClick={() => setIsEditingGame(true)}>Edit Game</button>
       )}
       {isEditingGame && props.user?.isAdmin && (
-        <GameForm game={game} setGame={setGame} setIsEditingGame={setIsEditingGame} />
+        <GameForm
+          game={game}
+          setGame={setGame}
+          setIsEditingGame={setIsEditingGame}
+        />
       )}
       <section style={{ marginTop: '2rem' }}>
         <h2>Reviews</h2>
-        <ReviewForm gameId={gameId} setIsEditingGame={setIsEditingGame} onReviewAdded={handleAddReview} />
+        <ReviewForm
+          gameId={gameId}
+          setIsEditingGame={setIsEditingGame}
+          onReviewAdded={handleAddReview}
+        />
 
         {reviews.length > 0 ? (
           reviews.map((review) => {

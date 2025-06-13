@@ -42,6 +42,7 @@ async function create(req, res) {
       released: data.released,
       developers: data.developers?.map((d) => d.name) || [],
       publishers: data.publishers?.map((p) => p.name) || [],
+      description: data.description_raw || '',
       reviews: [],
     });
     res.json(newGame);
