@@ -13,7 +13,7 @@ module.exports = function (req, res, next) {
     // Invalid token if err
     if (err) return next();
     // decoded is the entire token payload
-    req.user = { _id: decoded.user, isAdmin: decoded.isAdmin || false };
+    req.user = decoded.user; // ✅ this will be: { _id, name, isAdmin }
     return next();
   });
 };

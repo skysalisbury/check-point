@@ -38,20 +38,20 @@ export default function GameDetailsPage(props) {
   }
 
   function handleUpdateReview(reviewId) {
-  reviewService
-    .update(gameId, reviewId, editedReviewData)
-    .then((updatedReview) => {
-      setReviews((prevReviews) =>
-        prevReviews.map((r) => (r._id === reviewId ? updatedReview : r))
-      );
-      setIsEditing(false);
-      setEditedReviewData({ title: '', text: '', rating: '' });
-    })
-    .catch((err) => {
-      console.error('Failed to update review:', err);
-      alert('Unauthorized or failed to update review.');
-    });
-}
+    reviewService
+      .update(gameId, reviewId, editedReviewData)
+      .then((updatedReview) => {
+        setReviews((prevReviews) =>
+          prevReviews.map((r) => (r._id === reviewId ? updatedReview : r))
+        );
+        setIsEditing(false);
+        setEditedReviewData({ title: '', text: '', rating: '' });
+      })
+      .catch((err) => {
+        console.error('Failed to update review:', err);
+        alert('Unauthorized or failed to update review.');
+      });
+  }
 
   if (!game) return <main>Loading...</main>;
   return (
@@ -83,75 +83,88 @@ export default function GameDetailsPage(props) {
         <ReviewForm gameId={gameId} onReviewAdded={handleAddReview} />
 
         {reviews.length > 0 ? (
-          reviews.map((review) => (
-            <div key={review._id} style={{ marginBottom: '1rem' }}>
-              {isEditing === review._id ? (
-                <>
-                  <label>Title</label>
-                  <input
-                    name="title"
-                    value={editedReviewData.title}
-                    onChange={(e) =>
-                      setEditedReviewData({
-                        ...editedReviewData,
-                        title: e.target.value,
-                      })
-                    }
-                  />
-                  <label>Review</label>
-                  <textarea
-                    name="text"
-                    value={editedReviewData.text}
-                    onChange={(e) =>
-                      setEditedReviewData({
-                        ...editedReviewData,
-                        text: e.target.value,
-                      })
-                    }
-                  />
-                  <label>Rating</label>
-                  <input
-                    name="rating"
-                    type="number"
-                    min="1"
-                    max="10"
-                    value={editedReviewData.rating}
-                    onChange={(e) =>
-                      setEditedReviewData({
-                        ...editedReviewData,
-                        rating: e.target.value,
-                      })
-                    }
-                  />
-                  <button onClick={() => handleUpdateReview(review._id)}>
-                    Save
-                  </button>
-                  <button onClick={() => setIsEditing(false)}>Cancel</button>
-                </>
-              ) : (
-                <>
-                  <p>
-                    <strong>{review.title}</strong> by{' '}
-                    <strong>{review.author?.name || 'Anonymous'}:</strong>{' '}
-                    {review.text}
-                  </p>
-                  <p>Rating: {review.rating}</p>
-                  <button
-                    onClick={() => {
-                      setIsEditing(review._id);
-                      setEditedReviewData({
-                        title: review.title,
-                        text: review.text,
-                        rating: review.rating,
-                      });
-                    }}
-                  >
-                    Edit
-                  </button>
-                </>
-              )}
-            </div>
-          ))
+          reviews.map((review) => {
+            const canEditOrDelete =
+              review.author &&
+              (review.author._id === props.user?._id || props.user?.isAdmin);
+            console.log('review.author:', review.author);
+            console.log('user:', props.user);
+
+            return (
+              <div
+                key={review._id}
+                style={{
+                  border: '1px solid #ccc',
+                  padding: '1rem',
+                  marginBottom: '1rem',
+                }}
+              >
+                <h3>{review.title}</h3>
+                <p>{review.text}</p>
+                <p>Rating: {review.rating}</p>
+                <p>
+                  <strong>By:</strong> {review.author?.name || 'Anonymous'}
+                </p>
+
+                {canEditOrDelete && (
+                  <>
+                    <button
+                      onClick={() => {
+                        setIsEditing(review._id);
+                        setEditedReviewData({
+                          title: review.title,
+                          text: review.text,
+                          rating: review.rating,
+                        });
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button onClick={() => handleDeleteReview(review._id)}>
+                      Delete
+                    </button>
+                  </>
+                )}
+
+                {isEditing === review._id && (
+                  <div>
+                    <input
+                      type="text"
+                      value={editedReviewData.title}
+                      onChange={(e) =>
+                        setEditedReviewData({
+                          ...editedReviewData,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                    <textarea
+                      value={editedReviewData.text}
+                      onChange={(e) =>
+                        setEditedReviewData({
+                          ...editedReviewData,
+                          text: e.target.value,
+                        })
+                      }
+                    />
+                    <input
+                      type="number"
+                      value={editedReviewData.rating}
+                      onChange={(e) =>
+                        setEditedReviewData({
+                          ...editedReviewData,
+                          rating: e.target.value,
+                        })
+                      }
+                    />
+                    <button onClick={() => handleUpdateReview(review._id)}>
+                      Save
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })
         ) : (
           <p>No reviews yet.</p>
         )}

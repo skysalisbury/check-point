@@ -74,8 +74,8 @@ async function update(req, res) {
     review.text = req.body.text ?? review.text;
     review.rating = req.body.rating ?? review.rating;
     await review.save();
-
-    res.json(review);
+    const populated = await Review.findById(review._id).populate('author');
+    res.json(populated);
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: 'Failed to update review' });
