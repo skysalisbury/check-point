@@ -7,6 +7,7 @@ import ReviewListPage from '../ReviewListPage/ReviewListPage';
 import GameDetailsPage from '../GameDetailsPage/GameDetailsPage';
 import SignUpPage from '../SignUpPage/SignUpPage';
 import LogInPage from '../LogInPage/LogInPage';
+import SearchPage from '../SearchPage/SearchPage';
 import NavBar from '../../components/NavBar/NavBar';
 import './App.css';
 
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/games" element={<GameListPage />} />
             <Route path="/reviews" element={<ReviewListPage />} />
             <Route path="/games/:gameId" element={<GameDetailsPage user={user} />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="*" element={null} />
           </Routes>
         ) : (
