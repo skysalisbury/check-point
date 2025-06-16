@@ -31,9 +31,6 @@ app.use('/api/users', require('./routes/users'));
 // protects all routes defined in that router
 app.use(require('./middleware/ensureLoggedIn'));
 
-// All routes in routes/posts.js will be protected
-// app.use('/api/posts', require('./routes/posts'));
-
 // Use a "catch-all" route to deliver the frontend's production index.html
 app.get('/*splat', function (req, res) {
   res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));

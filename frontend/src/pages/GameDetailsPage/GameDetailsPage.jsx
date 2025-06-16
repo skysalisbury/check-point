@@ -15,6 +15,7 @@ export default function GameDetailsPage({ user, ...props }) {
   const [isEditingGame, setIsEditingGame] = useState(false);
   const [expandedReviewId, setExpandedReviewId] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate();
   const { gameId } = useParams();
   const [editedReviewData, setEditedReviewData] = useState({
@@ -48,6 +49,24 @@ export default function GameDetailsPage({ user, ...props }) {
     }
     fetchFavorites();
   }, [user, gameId]);
+
+  useEffect(() => {
+    async function fetchWishlist() {
+      if (!user) return;
+      const currentUser = await userService.getCurrentUser();
+      setIsWishlisted(currentUser.wishlist?.some((g) => g._id === gameId));
+    }
+    fetchWishlist();
+  }, [user, gameId]);
+
+  async function handleToggleWishlist() {
+    try {
+      await userService.toggleWishlist(gameId);
+      setIsWishlisted((prev) => !prev);
+    } catch (err) {
+      console.error('Failed to toggle wishlist:', err);
+    }
+  }
 
   function handleAddReview(newReview) {
     setReviews((prevReviews) => [newReview, ...prevReviews]);
@@ -126,6 +145,11 @@ export default function GameDetailsPage({ user, ...props }) {
       {user && (
         <button onClick={handleToggleFavorite}>
           {isFavorite ? '❤️ Unfavorite' : '🤍 Favorite'}
+        </button>
+      )}
+      {user && (
+        <button onClick={handleToggleWishlist}>
+          {isWishlisted ? '📭 Remove from Wishlist' : '📬 Add to Wishlist'}
         </button>
       )}
 
