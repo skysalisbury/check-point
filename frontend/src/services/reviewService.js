@@ -26,3 +26,7 @@ export async function update(gameId, reviewId, reviewData) {
 export async function deleteReview(gameId, reviewId) {
   return sendRequest(`/api/games/${gameId}/reviews/${reviewId}`, 'DELETE');
 }
+
+export async function indexByGame(gameId) {
+  return sendRequest(`/api/games/${gameId}/reviews`);
+}

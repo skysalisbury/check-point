@@ -26,4 +26,7 @@ router.put('/:gameId', checkToken, ensureAdmin, gamesCtrl.updateGame);
 //DELETE /api/games/:gameId (DELETE Action)
 router.delete('/:gameId', ensureLoggedIn, gamesCtrl.deleteGame);
 
+// New Index route to fetch reviews for a specific game
+router.get('/:gameId/reviews', reviewsCtrl.indexByGame);
+
 module.exports = router;

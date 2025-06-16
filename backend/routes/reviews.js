@@ -11,6 +11,9 @@ router.use(ensureLoggedIn);
 // GET /api/games/:gameId/reviews (INDEX action)
 router.get('/', reviewsCtrl.globalIndex);
 
+//Index for Game Specific routes
+// router.get('/', reviewsCtrl.indexByGame);
+
 //POST /api/games/:gameId/reviews (CREATE action)
 router.post('/', ensureLoggedIn, reviewsCtrl.create);
 

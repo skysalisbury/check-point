@@ -21,21 +21,24 @@ export default function GameDetailsPage(props) {
     rating: '',
   });
 
-  useEffect(() => {
-    async function fetchGameAndReviews() {
-      const game = await gameService.show(gameId);
-      setGame(game);
-
-      const res = await fetch(`/api/games/${gameId}/reviews`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      const reviewData = await res.json();
-      setReviews(reviewData);
+   useEffect(() => {
+    async function fetchGame() {
+      const gameData = await gameService.show(gameId);
+      setGame(gameData);
     }
-    fetchGameAndReviews();
+    fetchGame();
   }, [gameId]);
+
+  useEffect(() => {
+    async function fetchReviews() {
+      if (!game || !game._id) return; // ✅ Wait for game to load
+      const gameReviews = await reviewService.indexByGame(game._id);
+      setReviews(gameReviews);
+    }
+    fetchReviews();
+  }, [game]);
+
+  if (!game) return <p>Loading game...</p>;
 
   function handleAddReview(newReview) {
     setReviews((prevReviews) => [newReview, ...prevReviews]);

@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 module.exports = {
   globalIndex,
+  indexByGame,
   show,
   create,
   update,
@@ -107,5 +108,16 @@ async function deleteReview(req, res) {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Failed to delete review' });
+  }
+}
+
+async function indexByGame(req, res) {
+  try {
+    const reviews = await Review.find({ game: req.params.gameId })
+      .populate('author', 'name')
+      .sort({ createdAt: -1 });
+    res.json(reviews);
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch reviews for this game' });
   }
 }
