@@ -4,15 +4,17 @@ import ReviewForm from '../../components/ReviewForm/ReviewForm';
 import GameForm from '../../components/GameForm/GameForm';
 import * as gameService from '../../services/gameService';
 import * as reviewService from '../../services/reviewService';
+import * as userService from '../../services/userService';
 
 const MAX_PREVIEW_LENGTH = 100;
 
-export default function GameDetailsPage(props) {
+export default function GameDetailsPage({ user, ...props }) {
   const [game, setGame] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingGame, setIsEditingGame] = useState(false);
   const [expandedReviewId, setExpandedReviewId] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
   const navigate = useNavigate();
   const { gameId } = useParams();
   const [editedReviewData, setEditedReviewData] = useState({
@@ -21,7 +23,7 @@ export default function GameDetailsPage(props) {
     rating: '',
   });
 
-   useEffect(() => {
+  useEffect(() => {
     async function fetchGame() {
       const gameData = await gameService.show(gameId);
       setGame(gameData);
@@ -38,7 +40,14 @@ export default function GameDetailsPage(props) {
     fetchReviews();
   }, [game]);
 
-  if (!game) return <p>Loading game...</p>;
+  useEffect(() => {
+    async function fetchFavorites() {
+      if (!user) return;
+      const currentUser = await userService.getCurrentUser();
+      setIsFavorite(currentUser.favorites?.some((fav) => fav._id === gameId));
+    }
+    fetchFavorites();
+  }, [user, gameId]);
 
   function handleAddReview(newReview) {
     setReviews((prevReviews) => [newReview, ...prevReviews]);
@@ -69,6 +78,15 @@ export default function GameDetailsPage(props) {
     } catch (err) {
       console.error('Failed to delete review:', err);
       alert('You are not authorized to delete this review.');
+    }
+  }
+
+  async function handleToggleFavorite() {
+    try {
+      await userService.toggleFavorite(gameId);
+      setIsFavorite((prev) => !prev);
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err);
     }
   }
 
@@ -105,11 +123,16 @@ export default function GameDetailsPage(props) {
         <strong>Description:</strong>{' '}
         {game.description || 'No description provided.'}
       </p>
+      {user && (
+        <button onClick={handleToggleFavorite}>
+          {isFavorite ? '❤️ Unfavorite' : '🤍 Favorite'}
+        </button>
+      )}
 
-      {props.user?.isAdmin && !isEditingGame && (
+      {user?.isAdmin && !isEditingGame && (
         <button onClick={() => setIsEditingGame(true)}>Edit Game</button>
       )}
-      {isEditingGame && props.user?.isAdmin && (
+      {isEditingGame && user?.isAdmin && (
         <GameForm
           game={game}
           setGame={setGame}
@@ -119,17 +142,13 @@ export default function GameDetailsPage(props) {
 
       <section style={{ marginTop: '2rem' }}>
         <h2>Reviews</h2>
-        <ReviewForm
-          gameId={gameId}
-          setIsEditingGame={setIsEditingGame}
-          onReviewAdded={handleAddReview}
-        />
+        <ReviewForm gameId={gameId} onReviewAdded={handleAddReview} />
 
         {reviews.length > 0 ? (
           reviews.map((review) => {
             const canEditOrDelete =
               review.author &&
-              (review.author._id === props.user?._id || props.user?.isAdmin);
+              (review.author._id === user?._id || user?.isAdmin);
 
             const isExpanded = expandedReviewId === review._id;
             const isLong = review.text.length > MAX_PREVIEW_LENGTH;
