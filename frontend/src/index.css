@@ -1,85 +1,55 @@
 @import 'tailwindcss';
 
-:root {
-  font-family: Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color: #1a1a1a;
-  background-color: whitesmoke;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+html {
+  @apply bg-white text-black transition-colors duration-300;
 }
 
+html.dark {
+  @apply bg-gray-900 text-white;
+}
+
+/* Utility-safe base styles */
 * {
-  box-sizing: border-box;
+  @apply box-border;
 }
 
 body {
-  margin: 0;
-  min-height: 100vh;
+  @apply m-0 min-h-screen;
 }
 
 h1,
 h2 {
-  text-align: center;
+  @apply text-center;
 }
 
 button {
-  border: 0.5vmin solid #1a1a1a;
-  border-radius: 0.5vmin;
-  padding: 0.8vmin;
-  font-size: 2vmin;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  color: whitesmoke;
-  cursor: pointer;
+  @apply border border-black rounded p-2 text-base font-medium cursor-pointer;
 }
-
 button:hover {
-  background-color: white;
-  color: #1a1a1a;
-  border-color: #1a1a1a;
+  @apply bg-white text-black border-black;
 }
-
 button:disabled {
-  background-color: grey;
+  @apply bg-gray-400 cursor-not-allowed;
 }
 
 form {
-  display: grid;
-  gap: 1.2vmin;
-  padding: 4vmin;
-  border: 0.5vmin solid #1a1a1a;
-  border-radius: 1vmin;
+  @apply grid gap-3 p-8 border border-black rounded;
 }
 
 input,
 select,
 textarea {
-  padding: 0.7vmin;
-  font-size: 2vmin;
-  border: 0.3vmin solid #1a1a1a;
-  border-radius: 0.5vmin;
+  @apply p-2 text-base border border-black rounded;
 }
 
 form > button:last-child {
-  margin-top: 2vmin;
+  @apply mt-4;
 }
 
 label {
-  font-size: 2vmin;
-  font-weight: bold;
-}
-
-h2 {
-  text-align: center;
+  @apply text-base font-bold;
 }
 
 .error-message {
-  color: rgb(166, 29, 29);
+  @apply text-red-600;
 }

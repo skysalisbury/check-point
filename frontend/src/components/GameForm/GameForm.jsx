@@ -123,7 +123,6 @@ export default function GameForm({ game, setGame, setIsEditingGame }) {
       <button
         type="button"
         onClick={() => setIsEditingGame(false)}
-        style={{ marginLeft: '1rem' }}
       >
         Cancel
       </button>

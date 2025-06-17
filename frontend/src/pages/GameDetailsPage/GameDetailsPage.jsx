@@ -8,7 +8,7 @@ import * as userService from '../../services/userService';
 
 const MAX_PREVIEW_LENGTH = 100;
 
-export default function GameDetailsPage({ user, ...props }) {
+export default function GameDetailsPage({ user }) {
   const [game, setGame] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -18,11 +18,7 @@ export default function GameDetailsPage({ user, ...props }) {
   const [isWishlisted, setIsWishlisted] = useState(false);
   const navigate = useNavigate();
   const { gameId } = useParams();
-  const [editedReviewData, setEditedReviewData] = useState({
-    title: '',
-    text: '',
-    rating: '',
-  });
+  const [editedReviewData, setEditedReviewData] = useState({ title: '', text: '', rating: '' });
 
   useEffect(() => {
     async function fetchGame() {
@@ -34,7 +30,7 @@ export default function GameDetailsPage({ user, ...props }) {
 
   useEffect(() => {
     async function fetchReviews() {
-      if (!game || !game._id) return; // ✅ Wait for game to load
+      if (!game || !game._id) return;
       const gameReviews = await reviewService.indexByGame(game._id);
       setReviews(gameReviews);
     }
@@ -68,17 +64,24 @@ export default function GameDetailsPage({ user, ...props }) {
     }
   }
 
+  async function handleToggleFavorite() {
+    try {
+      await userService.toggleFavorite(gameId);
+      setIsFavorite((prev) => !prev);
+    } catch (err) {
+      console.error('Failed to toggle favorite:', err);
+    }
+  }
+
   function handleAddReview(newReview) {
-    setReviews((prevReviews) => [newReview, ...prevReviews]);
+    setReviews((prev) => [newReview, ...prev]);
   }
 
   function handleUpdateReview(reviewId) {
     reviewService
       .update(gameId, reviewId, editedReviewData)
       .then((updatedReview) => {
-        setReviews((prevReviews) =>
-          prevReviews.map((r) => (r._id === reviewId ? updatedReview : r))
-        );
+        setReviews((prev) => prev.map((r) => (r._id === reviewId ? updatedReview : r)));
         setIsEditing(false);
         setEditedReviewData({ title: '', text: '', rating: '' });
       })
@@ -91,21 +94,10 @@ export default function GameDetailsPage({ user, ...props }) {
   async function handleDeleteReview(reviewId) {
     try {
       await reviewService.deleteReview(gameId, reviewId);
-      setReviews((prevReviews) =>
-        prevReviews.filter((r) => r._id !== reviewId)
-      );
+      setReviews((prev) => prev.filter((r) => r._id !== reviewId));
     } catch (err) {
       console.error('Failed to delete review:', err);
       alert('You are not authorized to delete this review.');
-    }
-  }
-
-  async function handleToggleFavorite() {
-    try {
-      await userService.toggleFavorite(gameId);
-      setIsFavorite((prev) => !prev);
-    } catch (err) {
-      console.error('Failed to toggle favorite:', err);
     }
   }
 
@@ -113,97 +105,84 @@ export default function GameDetailsPage({ user, ...props }) {
     setExpandedReviewId((prevId) => (prevId === reviewId ? null : reviewId));
   }
 
-  if (!game) return <main>Loading...</main>;
+  if (!game) return <main className="p-4">Loading...</main>;
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h1>{game.title}</h1>
-      <img
-        src={game.coverImage}
-        alt={game.title}
-        style={{ width: '300px', borderRadius: '12px' }}
-      />
-      <p>
-        <strong>Released:</strong> {game.released || 'N/A'}
-      </p>
-      <p>
-        <strong>Genres:</strong> {game.genres?.join(', ') || 'N/A'}
-      </p>
-      <p>
-        <strong>Platforms:</strong> {game.platforms?.join(', ') || 'N/A'}
-      </p>
-      <p>
-        <strong>Developers:</strong> {game.developers?.join(', ') || 'N/A'}
-      </p>
-      <p>
-        <strong>Publishers:</strong> {game.publishers?.join(', ') || 'N/A'}
-      </p>
-      <p>
-        <strong>Description:</strong>{' '}
-        {game.description || 'No description provided.'}
-      </p>
-      {user && (
-        <button onClick={handleToggleFavorite}>
-          {isFavorite ? '❤️ Unfavorite' : '🤍 Favorite'}
-        </button>
+    <div className="p-4 bg-white text-black dark:bg-gray-900 dark:text-white transition-colors">
+      <h1 className="text-3xl font-bold mb-4">{game.title}</h1>
+      {game.coverImage && (
+        <img src={game.coverImage} alt={game.title} className="w-full max-w-sm mb-4 rounded shadow" />
       )}
-      {user && (
-        <button onClick={handleToggleWishlist}>
-          {isWishlisted ? '📭 Remove from Wishlist' : '📬 Add to Wishlist'}
-        </button>
-      )}
+
+      <div className="space-y-2 mb-4">
+        <p><strong>Released:</strong> {game.released || 'N/A'}</p>
+        <p><strong>Genres:</strong> {game.genres?.join(', ') || 'N/A'}</p>
+        <p><strong>Platforms:</strong> {game.platforms?.join(', ') || 'N/A'}</p>
+        <p><strong>Developers:</strong> {game.developers?.join(', ') || 'N/A'}</p>
+        <p><strong>Publishers:</strong> {game.publishers?.join(', ') || 'N/A'}</p>
+        <p><strong>Description:</strong> {game.description || 'No description provided.'}</p>
+      </div>
+
+      <div className="flex gap-4 mb-6">
+        {user && (
+          <>
+            <button
+              onClick={handleToggleFavorite}
+              className="px-3 py-1 border rounded dark:border-gray-600 dark:hover:bg-gray-700 hover:bg-gray-200"
+            >
+              {isFavorite ? '❤️ Unfavorite' : '🤍 Favorite'}
+            </button>
+            <button
+              onClick={handleToggleWishlist}
+              className="px-3 py-1 border rounded dark:border-gray-600 dark:hover:bg-gray-700 hover:bg-gray-200"
+            >
+              {isWishlisted ? '📭 Remove from Wishlist' : '📬 Add to Wishlist'}
+            </button>
+          </>
+        )}
+      </div>
 
       {user?.isAdmin && !isEditingGame && (
-        <button onClick={() => setIsEditingGame(true)}>Edit Game</button>
+        <button onClick={() => setIsEditingGame(true)} className="mb-4 underline text-blue-500">
+          Edit Game
+        </button>
       )}
       {isEditingGame && user?.isAdmin && (
-        <GameForm
-          game={game}
-          setGame={setGame}
-          setIsEditingGame={setIsEditingGame}
-        />
+        <GameForm game={game} setGame={setGame} setIsEditingGame={setIsEditingGame} />
       )}
 
-      <section style={{ marginTop: '2rem' }}>
-        <h2>Reviews</h2>
+      <section className="mt-8">
+        <h2 className="text-2xl font-semibold mb-2">Reviews</h2>
         <ReviewForm gameId={gameId} onReviewAdded={handleAddReview} />
 
         {reviews.length > 0 ? (
           reviews.map((review) => {
-            const canEditOrDelete =
-              review.author &&
-              (review.author._id === user?._id || user?.isAdmin);
-
+            const canEditOrDelete = review.author && (review.author._id === user?._id || user?.isAdmin);
             const isExpanded = expandedReviewId === review._id;
             const isLong = review.text.length > MAX_PREVIEW_LENGTH;
             const previewText = isExpanded
               ? review.text
-              : review.text.slice(0, MAX_PREVIEW_LENGTH) +
-                (isLong ? '...' : '');
+              : review.text.slice(0, MAX_PREVIEW_LENGTH) + (isLong ? '...' : '');
 
             return (
-              <div
-                key={review._id}
-                style={{
-                  border: '1px solid #ccc',
-                  padding: '1rem',
-                  marginBottom: '1rem',
-                }}
-              >
-                <h3>{review.title}</h3>
+              <div key={review._id} className="border p-4 rounded mb-4 dark:border-gray-700 bg-gray-50 dark:bg-gray-800">
+                <h3 className="text-lg font-semibold">{review.title}</h3>
                 <p>{previewText}</p>
                 {isLong && (
-                  <button onClick={() => toggleExpand(review._id)}>
+                  <button
+                    onClick={() => toggleExpand(review._id)}
+                    className="text-blue-500 hover:underline"
+                  >
                     {isExpanded ? 'Show less' : 'Read more'}
                   </button>
                 )}
-                <p>Rating: {review.rating}</p>
-                <p>
+                <p className="mt-1">Rating: {review.rating}</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
                   <strong>By:</strong> {review.author?.name || 'Anonymous'}
                 </p>
 
                 {canEditOrDelete && (
-                  <>
+                  <div className="mt-2 space-x-2">
                     <button
                       onClick={() => {
                         setIsEditing(review._id);
@@ -213,61 +192,52 @@ export default function GameDetailsPage({ user, ...props }) {
                           rating: review.rating,
                         });
                       }}
+                      className="text-yellow-600 hover:underline"
                     >
                       Edit
                     </button>
-                    <button onClick={() => handleDeleteReview(review._id)}>
+                    <button
+                      onClick={() => handleDeleteReview(review._id)}
+                      className="text-red-600 hover:underline"
+                    >
                       Delete
                     </button>
-                  </>
+                  </div>
                 )}
 
                 {isEditing === review._id && (
-                  <div>
+                  <div className="mt-2 space-y-2">
                     <input
                       type="text"
                       value={editedReviewData.title}
-                      onChange={(e) =>
-                        setEditedReviewData({
-                          ...editedReviewData,
-                          title: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setEditedReviewData({ ...editedReviewData, title: e.target.value })}
+                      className="w-full p-2 border rounded dark:bg-gray-900 dark:border-gray-700"
                     />
                     <textarea
                       value={editedReviewData.text}
-                      onChange={(e) =>
-                        setEditedReviewData({
-                          ...editedReviewData,
-                          text: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setEditedReviewData({ ...editedReviewData, text: e.target.value })}
+                      className="w-full p-2 border rounded dark:bg-gray-900 dark:border-gray-700"
                     />
                     <input
                       type="number"
                       value={editedReviewData.rating}
-                      onChange={(e) =>
-                        setEditedReviewData({
-                          ...editedReviewData,
-                          rating: e.target.value,
-                        })
-                      }
+                      onChange={(e) => setEditedReviewData({ ...editedReviewData, rating: e.target.value })}
+                      className="w-full p-2 border rounded dark:bg-gray-900 dark:border-gray-700"
                     />
-                    <button onClick={() => handleUpdateReview(review._id)}>
-                      Save
-                    </button>
-                    <button
-                      onClick={() => {
-                        setIsEditing(false);
-                        setEditedReviewData({
-                          title: '',
-                          text: '',
-                          rating: '',
-                        });
-                      }}
-                    >
-                      Cancel
-                    </button>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleUpdateReview(review._id)} className="text-green-600 hover:underline">
+                        Save
+                      </button>
+                      <button
+                        onClick={() => {
+                          setIsEditing(false);
+                          setEditedReviewData({ title: '', text: '', rating: '' });
+                        }}
+                        className="text-gray-600 hover:underline"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

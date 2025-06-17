@@ -46,7 +46,7 @@ export default function SearchPage() {
     }
   }
   return (
-    <div style={{ padding: '1rem' }}>
+    <div>
       <h1>Search Games</h1>
       <form onSubmit={handleSearch}>
         <input
@@ -62,9 +62,9 @@ export default function SearchPage() {
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
-      <ul style={{ marginTop: '1rem' }}>
+      <ul>
         {results.map((game) => (
-          <li key={game.id} style={{ marginBottom: '2rem' }}>
+          <li key={game.id}>
             <h3>
               {game.name} ({game.released || 'N/A'})
             </h3>
@@ -72,11 +72,6 @@ export default function SearchPage() {
               <img
                 src={game.background_image}
                 alt={game.name}
-                style={{
-                  width: '200px',
-                  borderRadius: '8px',
-                  marginBottom: '0.5rem',
-                }}
               />
             )}
             <br />

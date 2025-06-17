@@ -15,7 +15,7 @@ export default function ReviewListPage() {
   }, []);
 
   return (
-    <main style={{ padding: '1rem' }}>
+    <main>
       <h1>All Reviews</h1>
       {reviews.length === 0 ? (
         <p>No reviews yet.</p>
@@ -23,7 +23,6 @@ export default function ReviewListPage() {
         reviews.map((review) => (
           <div
             key={review._id}
-            style={{ borderBottom: '1px solid #ccc', marginBottom: '1rem' }}
           >
             <h2>{review.title}</h2>
 
