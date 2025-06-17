@@ -17,6 +17,9 @@ export default function App() {
 
   return (
     <main className="App">
+      <h1 className="text-4xl font-bold text-blue-600 dark:text-white">
+        Tailwind is working!
+      </h1>
       <NavBar user={user} setUser={setUser} />
       <section id="main-section">
         {user ? (
