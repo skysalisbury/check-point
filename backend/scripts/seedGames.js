@@ -38,6 +38,8 @@ async function seedGames() {
         platforms: detailedData.platforms?.map((p) => p.platform.name) || [],
         developers: detailedData.developers?.map((d) => d.name) || ['N/A'],
         publishers: detailedData.publishers?.map((p) => p.name) || ['N/A'],
+        description:
+          detailedData.description_raw || detailedData.description || '',
         reviews: [],
       });
 

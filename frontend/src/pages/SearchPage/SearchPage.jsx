@@ -1,13 +1,14 @@
 import { useState } from 'react';
+import { useNavigate, Link } from 'react-router'; // ← added useNavigate
 import { searchRawgGames, create } from '../../services/gameService';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';      
-import { Link } from 'react-router';                                
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // ← init
 
   /* ---------- handlers ---------- */
   async function handleSearch(evt) {
@@ -42,11 +43,10 @@ export default function SearchPage() {
 
     try {
       await create(gameData);
-      // eslint-disable-next-line no-alert
       alert(`✅ “${game.name}” added to your database!`);
+      navigate('/games'); // ← redirect
     } catch (err) {
       console.error(err);
-      // eslint-disable-next-line no-alert
       alert(`❌ Failed to add “${game.name}”.`);
     }
   }
@@ -57,9 +57,7 @@ export default function SearchPage() {
       {/* search bar */}
       <div className="mx-auto max-w-4xl px-4">
         <form onSubmit={handleSearch} className="relative flex items-center">
-          <MagnifyingGlassIcon
-            className="pointer-events-none absolute left-4 h-5 w-5 text-gray-400"
-          />
+          <MagnifyingGlassIcon className="pointer-events-none absolute left-4 h-5 w-5 text-gray-400" />
           <input
             type="text"
             placeholder="Search games…"
@@ -84,18 +82,18 @@ export default function SearchPage() {
       </div>
 
       {/* results grid */}
-      <ul className="mx-auto mt-10 grid max-w-6xl gap-6 px-4
-                     sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <ul
+        className="mx-auto mt-10 grid max-w-6xl gap-6 px-4
+                   sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+      >
         {results.map((game) => (
           <li key={game.id} className="group">
-            <Link to={`/games/${game.id}`}>
-              <div
-                className="
-                  overflow-hidden rounded-md bg-neutral-800 transition
-                  group-hover:-translate-y-1
-                  group-hover:shadow-lg group-hover:shadow-emerald-500/30
-                "
-              >
+            <div /* ← no Link here */
+              className="overflow-hidden rounded-md bg-neutral-800 transition
+               group-hover:-translate-y-1
+               group-hover:shadow-lg group-hover:shadow-emerald-500/30"
+            >
+              <Link to={`/games/${game.id}`}>
                 {game.background_image && (
                   <img
                     src={game.background_image}
@@ -103,28 +101,32 @@ export default function SearchPage() {
                     className="h-48 w-full object-cover"
                   />
                 )}
-                <div className="p-3">
-                  <h3 className="truncate text-gray-100 group-hover:text-emerald-400">
-                    {game.name}
-                  </h3>
-                  <p className="mt-1 text-sm text-gray-400">
-                    {game.released?.slice(0, 4) ?? 'TBA'}
-                  </p>
+              </Link>
 
-                  {/* add-to-DB button */}
-                  <button
-                    type="button"
-                    onClick={() => handleAddGame(game)}
-                    className="
-                      mt-3 w-full rounded-md bg-emerald-600 py-1.5 text-sm
-                      font-medium text-white transition hover:bg-emerald-500
-                    "
-                  >
-                    Add to Games List
-                  </button>
-                </div>
+              <div className="p-3">
+                <Link
+                  to={`/games/${game.id}`}
+                  className="truncate text-gray-100 group-hover:text-emerald-400"
+                >
+                  {game.name}
+                </Link>
+                <p className="mt-1 text-sm text-gray-400">
+                  {game.released?.slice(0, 4) ?? 'TBA'}
+                </p>
+
+                {/* add-to-DB button — now outside any <Link> */}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    await handleAddGame(game); // will call navigate('/games')
+                  }}
+                  className="mt-3 w-full rounded-md bg-emerald-600 py-1.5 text-sm
+                   font-medium text-white transition hover:bg-emerald-500"
+                >
+                  Add to Games List
+                </button>
               </div>
-            </Link>
+            </div>
           </li>
         ))}
       </ul>
