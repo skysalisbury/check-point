@@ -21,6 +21,7 @@ app.use(express.json());
 // user object in the JWT's payload to req.user
 app.use(require('./middleware/checkToken'));
 // API Routes
+
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/rawg', require('./routes/rawg'));
 app.use('/api/games/:gameId/reviews', require('./routes/gameReviews'));
@@ -29,7 +30,6 @@ app.use('/api/games', require('./routes/games'));
 app.use('/api/users', require('./routes/users'));
 // Routers mounted below ensureLoggedIn middleware
 // protects all routes defined in that router
-app.use(require('./middleware/ensureLoggedIn'));
 
 // Use a "catch-all" route to deliver the frontend's production index.html
 app.get('/*splat', function (req, res) {

@@ -6,8 +6,6 @@ const ensureLoggedIn = require('../middleware/ensureLoggedIn');
 const checkToken = require('../middleware/checkToken');
 const ensureAdmin = require('../middleware/ensureAdmin');
 
-// All paths start with '/api/posts'
-
 // Protect all defined routes
 router.use(ensureLoggedIn);
 
