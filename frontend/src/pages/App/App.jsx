@@ -15,7 +15,7 @@ export default function App() {
   const [user, setUser] = useState(getUser());
 
   return (
-    <div className="bg-white text-black dark:bg-gray-900 dark:text-white">
+    <div className="sticky top-0 z-50 bg-[#0d1d16] border-b border-neutral-800">
       {' '}
       <NavBar user={user} setUser={setUser} />
       <main className="p-4">
