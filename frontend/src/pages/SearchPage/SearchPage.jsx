@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { searchRawgGames, create } from '../../services/gameService';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';      
+import { Link } from 'react-router';                                
 
 export default function SearchPage() {
   const [query, setQuery] = useState('');
@@ -7,6 +9,7 @@ export default function SearchPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  /* ---------- handlers ---------- */
   async function handleSearch(evt) {
     evt.preventDefault();
     setLoading(true);
@@ -14,7 +17,7 @@ export default function SearchPage() {
     try {
       const rawgResults = await searchRawgGames(query);
       setResults(rawgResults);
-    } catch (err) {
+    } catch {
       setError('Search failed. Please try again.');
     } finally {
       setLoading(false);
@@ -39,46 +42,92 @@ export default function SearchPage() {
 
     try {
       await create(gameData);
-      alert(`✅ "${game.name}" added to your database!`);
+      // eslint-disable-next-line no-alert
+      alert(`✅ “${game.name}” added to your database!`);
     } catch (err) {
       console.error(err);
-      alert(`❌ Failed to add "${game.name}".`);
+      // eslint-disable-next-line no-alert
+      alert(`❌ Failed to add “${game.name}”.`);
     }
   }
+
+  /* ---------- render ---------- */
   return (
-    <div>
-      <h1>Search Games</h1>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Search for a game..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          required
-        />
-        <button type="submit">Search</button>
-      </form>
+    <section className="min-h-screen bg-neutral-900 pt-8 pb-16">
+      {/* search bar */}
+      <div className="mx-auto max-w-4xl px-4">
+        <form onSubmit={handleSearch} className="relative flex items-center">
+          <MagnifyingGlassIcon
+            className="pointer-events-none absolute left-4 h-5 w-5 text-gray-400"
+          />
+          <input
+            type="text"
+            placeholder="Search games…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            required
+            className="
+              w-full rounded-full bg-neutral-800 pl-12 pr-4 py-3
+              text-gray-100 placeholder-gray-500
+              border border-neutral-700 focus:border-emerald-500
+              focus:ring-2 focus:ring-emerald-500/50
+              shadow-lg shadow-black/30 transition
+            "
+          />
+        </form>
+      </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+      {/* status messages */}
+      <div className="mx-auto max-w-4xl px-4">
+        {loading && <p className="mt-6 text-gray-400">Loading…</p>}
+        {error && <p className="mt-6 text-red-500">{error}</p>}
+      </div>
 
-      <ul>
+      {/* results grid */}
+      <ul className="mx-auto mt-10 grid max-w-6xl gap-6 px-4
+                     sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {results.map((game) => (
-          <li key={game.id}>
-            <h3>
-              {game.name} ({game.released || 'N/A'})
-            </h3>
-            {game.background_image && (
-              <img
-                src={game.background_image}
-                alt={game.name}
-              />
-            )}
-            <br />
-            <button onClick={() => handleAddGame(game)}>Add to DB</button>
+          <li key={game.id} className="group">
+            <Link to={`/games/${game.id}`}>
+              <div
+                className="
+                  overflow-hidden rounded-md bg-neutral-800 transition
+                  group-hover:-translate-y-1
+                  group-hover:shadow-lg group-hover:shadow-emerald-500/30
+                "
+              >
+                {game.background_image && (
+                  <img
+                    src={game.background_image}
+                    alt={game.name}
+                    className="h-48 w-full object-cover"
+                  />
+                )}
+                <div className="p-3">
+                  <h3 className="truncate text-gray-100 group-hover:text-emerald-400">
+                    {game.name}
+                  </h3>
+                  <p className="mt-1 text-sm text-gray-400">
+                    {game.released?.slice(0, 4) ?? 'TBA'}
+                  </p>
+
+                  {/* add-to-DB button */}
+                  <button
+                    type="button"
+                    onClick={() => handleAddGame(game)}
+                    className="
+                      mt-3 w-full rounded-md bg-emerald-600 py-1.5 text-sm
+                      font-medium text-white transition hover:bg-emerald-500
+                    "
+                  >
+                    Add to Games List
+                  </button>
+                </div>
+              </div>
+            </Link>
           </li>
         ))}
       </ul>
-    </div>
+    </section>
   );
 }
