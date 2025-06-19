@@ -21,7 +21,6 @@ app.use(express.json());
 // user object in the JWT's payload to req.user
 app.use(require('./middleware/checkToken'));
 // API Routes
-
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/rawg', require('./routes/rawg'));
 app.use('/api/games/:gameId/reviews', require('./routes/gameReviews'));
