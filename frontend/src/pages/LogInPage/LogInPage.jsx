@@ -30,7 +30,7 @@ export default function LogInPage({ setUser }) {
     <section className="min-h-screen bg-neutral-900 flex items-center">
       <div className="mx-auto w-full max-w-md px-6">
         <div className="rounded-lg bg-neutral-800 p-8 shadow-lg shadow-black/30">
-          <h2 className="mb-6 text-center text-2xl font-bold text-gray-100">
+          <h2 className="font-display mb-6 text-center text-2xl font-bold text-gray-100">
             Sign in to <span className="text-emerald-400">Check-Point</span>
           </h2>
 

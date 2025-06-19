@@ -50,7 +50,7 @@ export default function HomePage({ user }) {
   return (
     <section className="min-h-screen bg-neutral-900 flex items-center">
       <div className="relative mx-auto max-w-4xl px-6 text-center text-gray-100">
-        <h1 className="text-4xl font-extrabold sm:text-5xl">
+        <h1 className="font-display text-4xl font-extrabold sm:text-5xl">
           Welcome to <span className="text-emerald-400">Check-Point</span>
         </h1>
         <p className="mt-4 text-lg text-gray-300">

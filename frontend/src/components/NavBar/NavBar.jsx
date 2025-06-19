@@ -26,7 +26,7 @@ export default function NavBar({ user, setUser }) {
     >
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
 
-        <Link to="/" className="text-lg font-bold text-emerald-400">
+        <Link to="/" className="font-display text-lg font-bold text-emerald-400">
           Check-Point
         </Link>
 

@@ -1,4 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Lexend:wght@700&display=swap');
 @import 'tailwindcss';
+
+@layer base {
+  body {
+    @apply font-sans;
+  }
+}
 
 html {
   @apply bg-white text-black transition-colors duration-300;

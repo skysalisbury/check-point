@@ -125,7 +125,7 @@ export default function GameDetailsPage({ user }) {
           ← Back to Game List
         </button>
 
-        <h1 className="mb-4 text-3xl font-bold">{game.title}</h1>
+        <h1 className="font-display mb-4 text-3xl font-bold">{game.title}</h1>
         {game.coverImage && (
           <img
             src={game.coverImage}
