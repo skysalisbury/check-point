@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router'; // ← added useNavigate
+import { useNavigate, Link } from 'react-router'; 
 import { searchRawgGames, create } from '../../services/gameService';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 
@@ -8,9 +8,8 @@ export default function SearchPage() {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // ← init
+  const navigate = useNavigate(); 
 
-  /* ---------- handlers ---------- */
   async function handleSearch(evt) {
     evt.preventDefault();
     setLoading(true);
@@ -44,17 +43,16 @@ export default function SearchPage() {
     try {
       await create(gameData);
       alert(`✅ “${game.name}” added to your database!`);
-      navigate('/games'); // ← redirect
+      navigate('/games'); 
     } catch (err) {
       console.error(err);
       alert(`❌ Failed to add “${game.name}”.`);
     }
   }
 
-  /* ---------- render ---------- */
   return (
     <section className="min-h-screen bg-neutral-900 pt-8 pb-16">
-      {/* search bar */}
+
       <div className="mx-auto max-w-4xl px-4">
         <form onSubmit={handleSearch} className="relative flex items-center">
           <MagnifyingGlassIcon className="pointer-events-none absolute left-4 h-5 w-5 text-gray-400" />
@@ -75,20 +73,18 @@ export default function SearchPage() {
         </form>
       </div>
 
-      {/* status messages */}
       <div className="mx-auto max-w-4xl px-4">
         {loading && <p className="mt-6 text-gray-400">Loading…</p>}
         {error && <p className="mt-6 text-red-500">{error}</p>}
       </div>
 
-      {/* results grid */}
       <ul
         className="mx-auto mt-10 grid max-w-6xl gap-6 px-4
                    sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
       >
         {results.map((game) => (
           <li key={game.id} className="group">
-            <div /* ← no Link here */
+            <div 
               className="overflow-hidden rounded-md bg-neutral-800 transition
                group-hover:-translate-y-1
                group-hover:shadow-lg group-hover:shadow-emerald-500/30"
@@ -114,11 +110,10 @@ export default function SearchPage() {
                   {game.released?.slice(0, 4) ?? 'TBA'}
                 </p>
 
-                {/* add-to-DB button — now outside any <Link> */}
                 <button
                   type="button"
                   onClick={async () => {
-                    await handleAddGame(game); // will call navigate('/games')
+                    await handleAddGame(game); 
                   }}
                   className="mt-3 w-full rounded-md bg-emerald-600 py-1.5 text-sm
                    font-medium text-white transition hover:bg-emerald-500"

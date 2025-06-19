@@ -6,7 +6,6 @@ export async function create(gameId, reviewData) {
   return sendRequest(`/api/games/${gameId}/reviews`, 'POST', reviewData);
 }
 
-//index
 export async function getAll(gameId) {
   return sendRequest(`${BASE_URL}`);
 }

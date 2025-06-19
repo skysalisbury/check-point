@@ -4,7 +4,7 @@ import { updateGame } from '../../services/gameService';
 
 export default function GameForm({ game, setGame, setIsEditingGame }) {
   const [formData, setFormData] = useState({
-    title: game.title || '', // ✅ corrected
+    title: game.title || '',
     description: game.description || '',
     released: game.released || '',
     genres: game.genres?.join(', ') || '',
@@ -46,7 +46,7 @@ export default function GameForm({ game, setGame, setIsEditingGame }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} style={{ marginTop: '1rem' }}>
+    <form onSubmit={handleSubmit} >
       <label>
         Game Title:
         <input

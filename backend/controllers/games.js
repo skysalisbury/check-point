@@ -13,8 +13,6 @@ module.exports = {
 async function index(req, res) {
   try {
     const games = await Game.find({});
-    // Below would return all posts for just the logged in user
-    // const posts = await Post.find({author: req.user._id});
     res.json(games);
   } catch (err) {
     console.log(err);

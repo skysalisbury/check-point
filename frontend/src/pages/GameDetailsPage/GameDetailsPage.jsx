@@ -25,7 +25,6 @@ export default function GameDetailsPage({ user }) {
   const navigate = useNavigate();
   const { gameId } = useParams();
 
-  /* ---------- data ---------- */
   useEffect(() => {
     async function fetchGame() {
       const gameData = await gameService.show(gameId);
@@ -60,7 +59,6 @@ export default function GameDetailsPage({ user }) {
     fetchWishlist();
   }, [user, gameId]);
 
-  /* ---------- helpers ---------- */
   async function handleToggleWishlist() {
     try {
       await userService.toggleWishlist(gameId);
@@ -87,7 +85,9 @@ export default function GameDetailsPage({ user }) {
     reviewService
       .update(gameId, reviewId, editedReviewData)
       .then((updated) => {
-        setReviews((prev) => prev.map((r) => (r._id === reviewId ? updated : r)));
+        setReviews((prev) =>
+          prev.map((r) => (r._id === reviewId ? updated : r))
+        );
         setIsEditing(false);
         setEditedReviewData({ title: '', text: '', rating: '' });
       })
@@ -113,11 +113,18 @@ export default function GameDetailsPage({ user }) {
 
   if (!game) return <main className="p-4 text-gray-100">Loading…</main>;
 
-  /* ---------- ui ---------- */
   return (
     <section className="min-h-screen bg-neutral-900 pt-8 pb-16">
       <div className="mx-auto max-w-4xl px-4 text-gray-100">
-        {/* title & art */}
+        <button
+          onClick={() => navigate('/games')}
+          className="
+           mb-6 inline-flex items-center gap-1 text-sm text-emerald-400
+           underline transition hover:text-emerald-300"
+        >
+          ← Back to Game List
+        </button>
+
         <h1 className="mb-4 text-3xl font-bold">{game.title}</h1>
         {game.coverImage && (
           <img
@@ -127,7 +134,6 @@ export default function GameDetailsPage({ user }) {
           />
         )}
 
-        {/* meta */}
         <ul className="space-y-1 text-sm text-gray-400">
           <li>
             <strong className="text-gray-300">Released:</strong>{' '}
@@ -155,7 +161,6 @@ export default function GameDetailsPage({ user }) {
           {game.description || 'No description provided.'}
         </p>
 
-        {/* fav / wishlist */}
         {user && (
           <div className="mt-6 flex gap-4">
             <button
@@ -181,7 +186,6 @@ export default function GameDetailsPage({ user }) {
           </div>
         )}
 
-        {/* admin game edit */}
         {user?.isAdmin && !isEditingGame && (
           <button
             onClick={() => setIsEditingGame(true)}
@@ -198,7 +202,6 @@ export default function GameDetailsPage({ user }) {
           />
         )}
 
-        {/* reviews */}
         <section className="mt-12">
           <h2 className="mb-4 text-2xl font-semibold">Reviews</h2>
           <ReviewForm gameId={gameId} onReviewAdded={handleAddReview} />
@@ -242,7 +245,6 @@ export default function GameDetailsPage({ user }) {
                     <strong>By:</strong> {review.author?.name || 'Anonymous'}
                   </p>
 
-                  {/* edit / delete */}
                   {canEdit && (
                     <div className="mt-3 flex gap-3 text-sm">
                       <button
@@ -267,7 +269,6 @@ export default function GameDetailsPage({ user }) {
                     </div>
                   )}
 
-                  {/* inline edit form */}
                   {isEditing === review._id && (
                     <div className="mt-4 space-y-2">
                       <input

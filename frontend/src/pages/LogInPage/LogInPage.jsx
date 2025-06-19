@@ -4,10 +4,11 @@ import * as authService from '../../services/authService';
 
 export default function LogInPage({ setUser }) {
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const [errorMsg, setErrorMsg]  = useState('');
-  const navigate   = useNavigate();
-  const location   = useLocation();
-  const redirectTo = new URLSearchParams(location.search).get('redirect') || '/';
+  const [errorMsg, setErrorMsg] = useState('');
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo =
+    new URLSearchParams(location.search).get('redirect') || '/';
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -33,9 +34,16 @@ export default function LogInPage({ setUser }) {
             Sign in to <span className="text-emerald-400">Check-Point</span>
           </h2>
 
-          <form autoComplete="off" onSubmit={handleSubmit} className="space-y-5">
+          <form
+            autoComplete="off"
+            onSubmit={handleSubmit}
+            className="space-y-5"
+          >
             <div>
-              <label htmlFor="email" className="mb-1 block text-sm font-medium text-gray-300">
+              <label
+                htmlFor="email"
+                className="mb-1 block text-sm font-medium text-gray-300"
+              >
                 Email
               </label>
               <input
@@ -50,7 +58,10 @@ export default function LogInPage({ setUser }) {
             </div>
 
             <div>
-              <label htmlFor="password" className="mb-1 block text-sm font-medium text-gray-300">
+              <label
+                htmlFor="password"
+                className="mb-1 block text-sm font-medium text-gray-300"
+              >
                 Password
               </label>
               <input
@@ -64,21 +75,26 @@ export default function LogInPage({ setUser }) {
               />
             </div>
 
-            <button type="submit" className="w-full rounded-md bg-emerald-600 py-3 font-medium text-white transition hover:bg-emerald-500">
+            <button
+              type="submit"
+              className="w-full rounded-md bg-emerald-600 py-3 font-medium text-white transition hover:bg-emerald-500"
+            >
               Log In
             </button>
 
-            {errorMsg && <p className="text-center text-sm text-red-500">{errorMsg}</p>}
+            {errorMsg && (
+              <p className="text-center text-sm text-red-500">{errorMsg}</p>
+            )}
           </form>
 
           <p className="mt-6 text-center text-sm text-gray-400">
             Don’t have an account?{' '}
             <Link
-  to={`/signup${location.search}`}        // keeps ?redirect=…
-  className="text-emerald-400 underline hover:text-emerald-300"
->
-  Sign&nbsp;Up
-</Link>
+              to={`/signup${location.search}`} 
+              className="text-emerald-400 underline hover:text-emerald-300"
+            >
+              Sign&nbsp;Up
+            </Link>
           </p>
         </div>
       </div>

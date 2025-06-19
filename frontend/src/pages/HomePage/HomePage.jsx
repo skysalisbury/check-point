@@ -19,16 +19,14 @@ export default function HomePage({ user }) {
 
   const location   = useLocation();
   const navigate   = useNavigate();
-  const authed     = !!user || tokenExists();   // ← robust auth flag
+  const authed     = !!user || tokenExists(); 
 
-  /* -------- consume ?redirect=… once we're authenticated -------- */
   useEffect(() => {
     if (!authed) return;
     const redirect = new URLSearchParams(location.search).get('redirect');
     if (redirect) navigate(redirect, { replace: true });
   }, [authed, location, navigate]);
 
-  /* -------- fetch 3 newest games (unchanged) -------- */
   useEffect(() => {
     (async () => {
       try {
@@ -59,7 +57,6 @@ export default function HomePage({ user }) {
           Discover, review, and track your favorite video games!
         </p>
 
-        {/* recently added */}
         <div className="mt-12">
           <h2 className="mb-6 text-2xl font-semibold">Recently Added</h2>
 
@@ -100,7 +97,6 @@ export default function HomePage({ user }) {
           )}
         </div>
 
-        {/* radial flourish */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-600/10 via-transparent to-transparent"

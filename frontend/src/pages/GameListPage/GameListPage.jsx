@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
-import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';   // ensure @heroicons/react is installed
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'; 
 import * as gameService from '../../services/gameService';
 
 export default function GameListPage() {
   const [games, setGames] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
-  /* ---------- data ---------- */
   useEffect(() => {
     async function fetchGames() {
       const data = await gameService.index();
@@ -20,13 +19,11 @@ export default function GameListPage() {
     g.title?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  /* ---------- render ---------- */
   return (
     <section className="min-h-screen bg-neutral-900 pt-8 pb-16">
       <div className="mx-auto max-w-4xl px-4">
         <h1 className="mb-6 text-2xl font-bold text-gray-100">Game List</h1>
 
-        {/* search bar */}
         <form className="relative flex items-center">
           <MagnifyingGlassIcon
             className="pointer-events-none absolute left-4 h-5 w-5 text-gray-400"
@@ -47,7 +44,6 @@ export default function GameListPage() {
         </form>
       </div>
 
-      {/* games grid */}
       <ul
         className="
           mx-auto mt-10 grid max-w-6xl gap-6 px-4
@@ -76,7 +72,7 @@ export default function GameListPage() {
                     <h2 className="truncate text-gray-100 group-hover:text-emerald-400">
                       {game.title}
                     </h2>
-                    {/* Any extra meta (year, genres) could go here */}
+
                   </div>
                 </div>
               </Link>

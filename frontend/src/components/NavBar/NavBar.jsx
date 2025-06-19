@@ -10,10 +10,8 @@ export default function NavBar({ user, setUser }) {
     navigate('/');
   }
 
-  /* base link style */
   const base = 'text-gray-300 transition hover:text-emerald-400 font-medium';
 
-  /* active-link helper for NavLink */
   const navClass = ({ isActive }) =>
     `${base} ${isActive ? 'text-emerald-400' : ''}`;
 
@@ -27,12 +25,11 @@ export default function NavBar({ user, setUser }) {
       "
     >
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        {/* ─── brand ─── */}
+
         <Link to="/" className="text-lg font-bold text-emerald-400">
           Check-Point
         </Link>
 
-        {/* ─── navigation links ─── */}
         <ul className="flex items-center gap-6">
           <li>
             <NavLink to="/" end className={navClass}>
@@ -41,7 +38,7 @@ export default function NavBar({ user, setUser }) {
           </li>
 
           {!user ? (
-            /* ——— unauthenticated ——— */
+
             <>
               <li>
                 <NavLink to="/login" className={navClass}>
@@ -55,7 +52,6 @@ export default function NavBar({ user, setUser }) {
               </li>
             </>
           ) : (
-            /* ——— authenticated ——— */
             <>
               <li>
                 <NavLink to="/games" className={navClass}>

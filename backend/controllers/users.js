@@ -8,7 +8,6 @@ module.exports = {
   getMe,
 };
 
-// GET /api/users/me
 async function getCurrentUser(req, res) {
   try {
     const user = await User.findById(req.user._id).populate('favorites');
@@ -26,9 +25,9 @@ async function toggleFavorite(req, res) {
     const index = user.favorites.findIndex((fav) => fav.toString() === gameId);
 
     if (index > -1) {
-      user.favorites.splice(index, 1); // remove from favorites
+      user.favorites.splice(index, 1);
     } else {
-      user.favorites.push(gameId); // add to favorites
+      user.favorites.push(gameId);
     }
 
     await user.save();
@@ -48,7 +47,7 @@ async function toggleWishlist(req, res) {
 
     if (index > -1) {
     } else {
-      user.wishlist.push(gameId); // add if not exists
+      user.wishlist.push(gameId);
     }
 
     await user.save();

@@ -5,12 +5,11 @@ import * as reviewService from '../../services/reviewService';
 export default function ReviewListPage() {
   const [reviews, setReviews] = useState([]);
 
-  /* ---------- data ---------- */
+
   useEffect(() => {
     (async () => setReviews(await reviewService.getAll()))();
   }, []);
 
-  /* ---------- render ---------- */
   return (
     <section className="min-h-screen bg-neutral-900 pt-8 pb-16">
       <div className="mx-auto max-w-4xl px-4 text-gray-100">

@@ -10,10 +10,8 @@ const initialState = {
 
 export default function ReviewForm(props) {
   const [formData, setFormData] = useState(initialState);
-  const { gameId } = useParams(); // ✅ Needed for reviewService.create
-  // const { gameId: routeGameId } = useParams();
-  // const gameId = props.gameId || routeGameId; Comeback and replace the const { gameId } with these lines
-  //if I want to add reviews from a different page than GamesDetailsPage
+  const { gameId } = useParams(); 
+ 
 
   const handleChange = (evt) => {
     setFormData({ ...formData, [evt.target.name]: evt.target.value });
@@ -22,8 +20,8 @@ export default function ReviewForm(props) {
   const handleSubmit = async (evt) => {
     evt.preventDefault();
     const newReview = await reviewService.create(gameId, formData);
-    props.onReviewAdded(newReview); // ✅ Update parent with new review
-    setFormData(initialState); // ✅ Reset form
+    props.onReviewAdded(newReview); 
+    setFormData(initialState); 
   };
 
   return (

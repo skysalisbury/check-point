@@ -1,7 +1,7 @@
 require('dotenv').config({ path: '../.env' });
 const mongoose = require('mongoose');
-const fetch = require('node-fetch'); // npm i node-fetch@2
-const Game = require('../models/game'); // ← adjust if path differs
+const fetch = require('node-fetch');
+const Game = require('../models/game');
 
 const RAWG_BASE = 'https://api.rawg.io/api';
 
