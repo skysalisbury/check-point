@@ -16,7 +16,7 @@ router.get('/:gameId', gamesCtrl.show);
 router.use(ensureLoggedIn);
 
 //POST /api/games (CREATE action)
-router.post('/', ensureLoggedIn, gamesCtrl.create);
+router.post('/', gamesCtrl.create);
 
 //PUT /api/games/:gameId (Update Action)
 router.put('/:gameId', checkToken, ensureAdmin, gamesCtrl.updateGame);

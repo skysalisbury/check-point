@@ -23,7 +23,7 @@
 - [RAWG Video Games Database](https://rawg.io/)
 - TailwindCSS
 - Jest • ESLint airbnb-base
-- ChatGPT - Support
+- ChatGPT - Support and favicon
 - React 18 + Vite
 - Heroku
 - Trello
